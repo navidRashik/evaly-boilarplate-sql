@@ -1,0 +1,13 @@
+app:
+  port:
+    8000
+  graceful_timeout:
+    30
+  system_server_port:
+    8001
+mongo:
+  url: mongodb://root:root@localhost:27017
+  db_name: boilerplate
+  time_out: 30
+collection:
+  brand: brands
