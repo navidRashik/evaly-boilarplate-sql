@@ -26,7 +26,7 @@ func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*DB
 	gormConfig := &gorm.Config{}
 
 	var dialector gorm.Dialector
-	if driverName == "sql" {
+	if driverName == "mysql" {
 		dialector = mysql.New(mysql.Config{
 			DriverName:        name,
 			DSN:               dsn,
