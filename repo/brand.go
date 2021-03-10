@@ -32,8 +32,9 @@ func NewBrand(table string, db infra.DB) BrandRepo {
 }
 
 // Indices returns indices
-func (*MgoBrand) Indices() []infra.DbIndex {
-	return []infra.DbIndex{
+func (*MgoBrand) Indices() []interface{} {
+	res := make([]interface{}, 0)
+	data := []infra.DbIndex{
 		{
 			Name: "slug_1_version_1",
 			Keys: []infra.DbIndexKey{
@@ -52,17 +53,22 @@ func (*MgoBrand) Indices() []infra.DbIndex {
 			},
 		},
 	}
+
+	for _, d := range data {
+		res = append(res, d)
+	}
+	return res
 }
 
 // EnsureIndices ...
 func (p *MgoBrand) EnsureIndices() error {
-	return p.db.EnsureIndices(context.Background(), p.table, p.Indices())
+	return p.db.EnsureIndices(context.Background(), p.Indices())
 }
 
-// DropIndices ...
-func (p *MgoBrand) DropIndices() error {
-	return p.db.DropIndices(context.Background(), p.table, p.Indices())
-}
+//// DropIndices ...
+//func (p *MgoBrand) DropIndices() error {
+//	return p.db.DropIndices(context.Background(), p.table, p.Indices())
+//}
 
 // Create ...
 func (p *MgoBrand) Create(ctx context.Context, bi *model.BrandInfo) error {
@@ -79,7 +85,7 @@ func (p *MgoBrand) ListBrands(ctx context.Context, search string, skip, limit in
 		"id": -1,
 	}
 	categoryResults := make([]model.BrandInfo, 0)
-	if err := p.db.List(ctx, p.table, query, skip, limit, &categoryResults, sort); err != nil {
+	if err := p.db.FindMany(ctx, p.table, query, skip, limit, &categoryResults, sort); err != nil {
 		return nil, err
 	}
 

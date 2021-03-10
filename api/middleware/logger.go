@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go-mysql-boilerplate/logger"
 	"github.com/go-chi/chi/middleware"
+	"go-mysql-boilerplate/logger"
 	"net/http"
 )
 

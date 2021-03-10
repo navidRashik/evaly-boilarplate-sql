@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -43,12 +42,12 @@ func (s *SystemController) apiCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *SystemController) connCheck() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	_, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 	log.Println("db ping")
-	if err := s.db.Ping(ctx); err != nil {
-		return fmt.Errorf("mongo conn error: %v", err)
-	}
+	//if err := s.db.Ping(ctx); err != nil {
+	//	return fmt.Errorf("mongo conn error: %v", err)
+	//}
 
 	return nil
 }

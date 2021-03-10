@@ -15,8 +15,8 @@ import (
 	"go-mysql-boilerplate/api"
 	"go-mysql-boilerplate/config"
 	"go-mysql-boilerplate/infra"
-	infraMongo "go-mysql-boilerplate/infra/mongo"
 	infraSentry "go-mysql-boilerplate/infra/sentry"
+	infraSql "go-mysql-boilerplate/infra/sql"
 	"go-mysql-boilerplate/logger"
 	"go-mysql-boilerplate/repo"
 	"go-mysql-boilerplate/service"
@@ -37,19 +37,22 @@ func init() {
 
 func serve(cmd *cobra.Command, args []string) error {
 	cfgApp := config.GetApp(cfgPath)
-	cfgMongo := config.GetMongo(cfgPath)
+	cfgMySQL := config.GetMySQL(cfgPath)
 	cfgSentry := config.GetSentry(cfgPath)
 	cfgDBTable := config.GetTable(cfgPath)
 
 	ctx := context.Background()
 
 	lgr := logger.DefaultOutStructLogger
+	var err error
 
-	db, err := infraMongo.New(ctx, cfgMongo.URL, cfgMongo.DBName, cfgMongo.DBTimeOut)
-	if err != nil {
-		return err
-	}
-	defer db.Close(ctx)
+	//db, err := infraMongo.New(ctx, cfgMySQL.URL, cfgMySQL.DBName, cfgMySQL.DBTimeOut)
+	//if err != nil {
+	//	return err
+	//}
+	//defer db.Close(ctx)
+
+	db, err := infraSql.New(ctx, "mysql", cfgMySQL.URL, cfgMySQL.DBName, nil)
 
 	err = infraSentry.NewInit(cfgSentry.URL)
 	if err != nil {

@@ -31,5 +31,5 @@ func ToBsonDDoc(v interface{}) (bson.D, error) {
 // Repo defines repository
 type Repo interface {
 	EnsureIndices() error
-	DropIndices() error
+	//DropIndices() error
 }

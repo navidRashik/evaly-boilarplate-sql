@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"time"
 
-	"go-mysql-boilerplate/api/middleware"
-	"go-mysql-boilerplate/logger"
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/middleware"
+	"go-mysql-boilerplate/api/middleware"
+	"go-mysql-boilerplate/logger"
 )
 
 var lgr logger.Logger
