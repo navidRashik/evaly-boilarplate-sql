@@ -7,18 +7,18 @@ import (
 	"time"
 
 	"go-mysql-boilerplate/api/response"
-	"go-mysql-boilerplate/infra"
+	infraSql "go-mysql-boilerplate/infra/sql"
 )
 
 // SystemController ..
 type SystemController struct {
-	db infra.DB
+	DB *infraSql.DB
 }
 
 // NewSystemController ..
-func NewSystemController(db infra.DB) *SystemController {
+func NewSystemController(db *infraSql.DB) *SystemController {
 	return &SystemController{
-		db: db,
+		DB: db,
 	}
 }
 
@@ -44,10 +44,7 @@ func (s *SystemController) apiCheck(w http.ResponseWriter, r *http.Request) {
 func (s *SystemController) connCheck() error {
 	_, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
-	log.Println("db ping")
-	//if err := s.db.Ping(ctx); err != nil {
-	//	return fmt.Errorf("mongo conn error: %v", err)
-	//}
+	log.Println("DB ping")
 
-	return nil
+	return s.DB.Ping()
 }

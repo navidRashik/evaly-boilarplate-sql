@@ -14,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 	"go-mysql-boilerplate/api"
 	"go-mysql-boilerplate/config"
-	"go-mysql-boilerplate/infra"
 	infraSentry "go-mysql-boilerplate/infra/sentry"
 	infraSql "go-mysql-boilerplate/infra/sql"
 	"go-mysql-boilerplate/logger"
@@ -80,7 +79,7 @@ func serve(cmd *cobra.Command, args []string) error {
 
 }
 
-func startHealthServer(cfg *config.Application, db infra.DB) error {
+func startHealthServer(cfg *config.Application, db *infraSql.DB) error {
 	log.Println("startHealthServer")
 	sc := api.NewSystemController(db)
 	api.NewSystemRouter(sc)

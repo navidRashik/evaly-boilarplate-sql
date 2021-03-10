@@ -2,8 +2,8 @@ package sql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-	"go-mysql-boilerplate/infra"
 	"go-mysql-boilerplate/logger"
 	"gorm.io/driver/postgres"
 	"log"
@@ -12,16 +12,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// SqlDB holds necessery fields and
-// mongo database session to connect
-type SqlDB struct {
-	database *gorm.DB
-	name     string
+// DB holds necessery fields and
+// mongo Database session to connect
+type DB struct {
+	Database *gorm.DB
+	SqlDB    *sql.DB
+	Name     string
 	lgr      logger.Logger
 }
 
 // New returns a new instance of mongodb using session s
-func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*SqlDB, error) {
+func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*DB, error) {
 	gormConfig := &gorm.Config{}
 
 	var dialector gorm.Dialector
@@ -49,9 +50,16 @@ func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*Sq
 	if err != nil {
 		return nil, err
 	}
-	db := &SqlDB{
-		database: database,
-		name:     name,
+
+	sqlDB, err := database.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	db := &DB{
+		Database: database,
+		Name:     name,
+		SqlDB:    sqlDB,
 	}
 	for _, opt := range opts {
 		opt.apply(db)
@@ -61,42 +69,42 @@ func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*Sq
 
 // Option is mongo db option
 type Option interface {
-	apply(*SqlDB)
+	apply(*DB)
 }
 
 // OptionFunc implements Option interface
-type OptionFunc func(db *SqlDB)
+type OptionFunc func(db *DB)
 
-func (f OptionFunc) apply(db *SqlDB) {
+func (f OptionFunc) apply(db *DB) {
 	f(db)
 }
 
 // SetLogger sets logger
 func SetLogger(lgr logger.Logger) Option {
-	return OptionFunc(func(db *SqlDB) {
+	return OptionFunc(func(db *DB) {
 		db.lgr = lgr
 	})
 }
 
-func (d *SqlDB) println(args ...interface{}) {
+func (d *DB) println(args ...interface{}) {
 	if d.lgr != nil {
 		d.lgr.Println(args...)
 	}
 }
 
-//func (d *SqlDB) Ping(ctx context.Context) error {
-//	return d.database.Ping(ctx, readpref.Primary())
+//func (d *DB) Ping(ctx context.Context) error {
+//	return d.Database.Ping(ctx, readpref.Primary())
 //}
 //
-//func (d *SqlDB) Close(ctx context.Context) error {
+//func (d *DB) Close(ctx context.Context) error {
 //	return d.Client.Disconnect(ctx)
 //}
 
 // EnsureIndices creates indices for collection col
-func (d *SqlDB) EnsureIndices(ctx context.Context, inds []interface{}) error {
+func (d *DB) EnsureIndices(ctx context.Context, inds []interface{}) error {
 	log.Println("creating migration")
 	var err error
-	db := d.database
+	db := d.Database
 	for _, ind := range inds {
 		err = db.AutoMigrate(ind)
 		if err != nil {
@@ -106,26 +114,7 @@ func (d *SqlDB) EnsureIndices(ctx context.Context, inds []interface{}) error {
 	return nil
 }
 
-func (d *SqlDB) Insert(ctx context.Context, table string, v interface{}) error {
-	panic("implement me")
-}
-
-func (d *SqlDB) InsertMany(ctx context.Context, table string, v []interface{}) error {
-	panic("implement me")
-}
-
-func (d *SqlDB) FindMany(ctx context.Context, table string, filter interface{}, skip, limit int64, v interface{}, sort ...interface{}) error {
-	panic("implement me")
-}
-
-func (d *SqlDB) FindOne(ctx context.Context, table string, filter infra.DbQuery, v interface{}, sort ...interface{}) error {
-	panic("implement me")
-}
-
-func (d *SqlDB) UpdateMany(ctx context.Context, table string, filter infra.DbQuery, data interface{}) error {
-	panic("implement me")
-}
-
-func (d *SqlDB) UpdateOne(ctx context.Context, table string, filter infra.DbQuery, data interface{}) error {
-	panic("implement me")
+func (d *DB) Ping() error {
+	log.Println("ping db")
+	return d.SqlDB.Ping()
 }

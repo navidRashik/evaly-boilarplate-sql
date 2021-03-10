@@ -15,11 +15,11 @@ func (c *Service) SetLogger(l logger.StructLogger) {
 }
 
 // ListBrand ...
-func (c *Service) ListBrand(ctx context.Context, pager utils.Pager) ([]model.BrandInfo, error) {
+func (c *Service) ListBrand(ctx context.Context, pager utils.Pager) ([]*model.BrandInfo, error) {
 	tid := utils.GetTracingID(ctx)
 
 	c.log.Println("ListBrands", tid, "listing product brands from database")
-	brands, err := c.brandRepo.ListBrands(ctx, "", pager.Skip, pager.Limit)
+	brands, err := c.brandRepo.ListBrands(ctx, &model.BrandInfo{}, int(pager.Skip), int(pager.Limit))
 	if err != nil {
 		fmt.Println(err)
 		c.log.Errorln("ListBrands", tid, err.Error())
