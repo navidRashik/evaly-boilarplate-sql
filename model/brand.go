@@ -17,10 +17,10 @@ type BrandInfo struct {
 	gorm.Model
 	Name        string   `json:"name,omitempty"`
 	Approved    bool     `json:"approved,omitempty"`
-	Slug        string   `gorm:"unique"`
+	Slug        string   `gorm:"unique" json:"slug,omitempty"`
 	Description string   `json:"description,omitempty"`
 	BrandType   string   `json:"brand_type,omitempty"`
-	Categories  string `json:"categories,omitempty"`
+	Categories  string   `json:"categories,omitempty"`
 	ImageURL    string   `json:"image_url,omitempty"`
 	Status      Status   `json:"status,omitempty"`
 	BrandScore  float64  `json:"brand_score,omitempty"`
