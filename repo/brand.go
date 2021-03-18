@@ -85,3 +85,17 @@ func (p *MyBrand) GetBrandDetails(ctx context.Context, slug string) (*model.Bran
 
 	return brand, nil
 }
+
+
+
+//func (p *MyBrand) UpdateBrand(ctx context.Context, param model.BrandInfo) error {
+//	filter := infra.DbQuery{
+//		{"slug", param.slug},
+//	}
+//	data, err := ToBsonMDoc(param)
+//	if err != nil {
+//		return err
+//	}
+//	fmt.Println("data user balance ", data, " error ", err)
+//	return p.db.PartialUpdateMany(ctx, p.table, filter, data)
+//}

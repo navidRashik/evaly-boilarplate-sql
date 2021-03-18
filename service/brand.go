@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	//"errors"
 
 	"go-mysql-boilerplate/logger"
 	"go-mysql-boilerplate/model"
@@ -44,3 +45,34 @@ func (c *Service) AddBrand(ctx context.Context, brand *model.BrandInfo) error {
 	c.log.Println("AddBrand", tid, "sent response successfully")
 	return nil
 }
+
+//
+//func (c *Service) UpdateBrand(ctx context.Context, param model.BrandInfo) error {
+//	tid := utils.GetTracingID(ctx)
+//	c.log.Printf("UpdateUserBalance", tid, "param %v", param)
+//	slug := param.Slug
+//	if slug == "" {
+//		return errors.New("slug missing")
+//	}
+//
+//	if err := c.brandRepo.GetBrandDetails(ctx, slug); err != nil {
+//		c.log.Errorln("UpdateBrand", tid, err.Error())
+//		return err
+//	}
+//	return nil
+//}
+
+func (c *Service) GetBrand(ctx context.Context, slug string) (*model.BrandInfo, error) {
+	tid := utils.GetTracingID(ctx)
+	c.log.Println("GetUserBalance", tid, "getting brand from database")
+	brand, err := c.brandRepo.GetBrandDetails(ctx, slug)
+	if err != nil {
+		c.log.Errorln("GetBrand", tid, err.Error())
+		return nil, err
+	}
+	c.log.Println("GetBrand", tid, "sent response successfully")
+	return brand, nil
+}
+
+
+

@@ -11,6 +11,7 @@ func brandsRouter(ctrl *BrandsController) http.Handler {
 	h.Group(func(r chi.Router) {
 		r.Get("/", ctrl.ListBrand)
 		r.Post("/", ctrl.AddBrand)
+		r.Get("/{slug}", ctrl.GetBrand)
 	})
 
 	return h
