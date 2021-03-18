@@ -1,9 +1,5 @@
 package model
 
-import (
-	"gorm.io/gorm"
-)
-
 // Status defines status
 type Status string
 
@@ -14,7 +10,7 @@ const (
 
 // BrandInfo defines brand model
 type BrandInfo struct {
-	gorm.Model
+	BaseModel
 	Name        string   `json:"name,omitempty"`
 	Approved    bool     `json:"approved,omitempty"`
 	Slug        string   `gorm:"unique" json:"slug,omitempty"`
