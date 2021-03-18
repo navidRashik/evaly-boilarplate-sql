@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"gorm.io/gorm/clause"
 	"log"
 
@@ -12,7 +13,8 @@ import (
 
 // BrandRepo returns brand repo
 type BrandRepo interface {
-	Create(ctx context.Context, bi *model.BrandInfo) error
+	CreateBrand(ctx context.Context, bi *model.BrandInfo) error
+	UpdateBrand(ctx context.Context, bi model.BrandInfo) error
 	ListBrands(ctx context.Context, selector *model.BrandInfo, skip, limit int) ([]*model.BrandInfo, error)
 	GetBrandDetails(ctx context.Context, slug string) (*model.BrandInfo, error)
 }
@@ -48,7 +50,7 @@ func (p *MyBrand) EnsureIndices() error {
 //}
 
 // Create ...
-func (p *MyBrand) Create(ctx context.Context, bi *model.BrandInfo) error {
+func (p *MyBrand) CreateBrand(ctx context.Context, bi *model.BrandInfo) error {
 	return p.db.Database.Create(bi).Error
 }
 
@@ -86,16 +88,26 @@ func (p *MyBrand) GetBrandDetails(ctx context.Context, slug string) (*model.Bran
 	return brand, nil
 }
 
+func (p *MyBrand) UpdateBrand(ctx context.Context, param model.BrandInfo) error {
+	selector := &model.BrandInfo{Slug: param.Slug}
 
+	brand := &model.BrandInfo{}
 
-//func (p *MyBrand) UpdateBrand(ctx context.Context, param model.BrandInfo) error {
-//	filter := infra.DbQuery{
-//		{"slug", param.slug},
-//	}
-//	data, err := ToBsonMDoc(param)
-//	if err != nil {
-//		return err
-//	}
-//	fmt.Println("data user balance ", data, " error ", err)
-//	return p.db.PartialUpdateMany(ctx, p.table, filter, data)
-//}
+	err := p.db.Database.First(brand, selector).Error
+	if err != nil || brand.ID == 0 {
+		log.Println("brand not found for slug", param.Slug)
+		return errors.New("brand not found for slug")
+	} else {
+		log.Println("brand found:", param)
+		newParam := map[string]interface{}{
+			"name": param.Name,
+			"brand_score": param.BrandScore,
+			"approved": param.Approved,
+			"status": param.Status}
+		if param.Description != "" {
+			newParam["description"] = param.Description
+		}
+		p.db.Database.Model(brand).Updates(newParam)
+	}
+	return nil
+}

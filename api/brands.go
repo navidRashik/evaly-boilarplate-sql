@@ -79,29 +79,29 @@ func (cc *BrandsController) AddBrand(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update UserBalanceTransactions ...
-//func (cc *BrandsController) UpdateBrand(w http.ResponseWriter, r *http.Request) {
-//	tid := utils.GetTracingID(r.Context())
-//	//fmt.Println("method w", w, "r ", r)
-//	param := model.BrandInfo{}
-//
-//	if err := json.NewDecoder(r.Body).Decode(&param); err != nil {
-//		_ = response.ServeJSON(w, http.StatusBadRequest, nil, nil, utils.RequiredFieldMessage(), nil)
-//		return
-//	}
-//
-//	cc.lgr.Println("UpdateUserBalance", tid, "updating UserBalance")
-//	err := cc.svc.AddBrand(r.Context(), param)
-//	if err != nil {
-//		cc.lgr.Errorln("UpdateUserBalance", tid, err.Error())
-//		_ = response.ServeJSON(w, http.StatusInternalServerError, nil, nil, err.Error(), nil)
-//		return
-//	}
-//
-//	cc.lgr.Println("UpdateUserBalance", tid, "sending response")
-//	_ = response.ServeJSON(w, http.StatusOK, nil, nil, utils.SuccessMessage, nil)
-//	return
-//}
+//Update User Brand ...
+func (cc *BrandsController) UpdateBrand(w http.ResponseWriter, r *http.Request) {
+	tid := utils.GetTracingID(r.Context())
+	//fmt.Println("method w", w, "r ", r)
+	param := model.BrandInfo{}
+
+	if err := json.NewDecoder(r.Body).Decode(&param); err != nil {
+		_ = response.ServeJSON(w, http.StatusBadRequest, nil, nil, utils.RequiredFieldMessage(), nil)
+		return
+	}
+
+	cc.lgr.Println("UpdateBrand", tid, "updating brand")
+	err := cc.svc.UpdateBrand(r.Context(), param)
+	if err != nil {
+		cc.lgr.Errorln("UpdateBrand", tid, err.Error())
+		_ = response.ServeJSON(w, http.StatusInternalServerError, nil, nil, err.Error(), nil)
+		return
+	}
+
+	cc.lgr.Println("UpdateBrand", tid, "sending response")
+	_ = response.ServeJSON(w, http.StatusOK, nil, nil, utils.SuccessMessage, nil)
+	return
+}
 
 // Get UserBalance ...
 func (c *BrandsController) GetBrand(w http.ResponseWriter, r *http.Request) {

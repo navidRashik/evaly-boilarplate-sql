@@ -15,14 +15,14 @@ const (
 // BrandInfo defines brand model
 type BrandInfo struct {
 	gorm.Model
-	Name        string
-	Approved    bool
+	Name        string   `json:"name,omitempty"`
+	Approved    bool     `json:"approved,omitempty"`
 	Slug        string   `gorm:"unique"`
-	Description string
-	BrandType   string
-	Categories  string
-	ImageURL    string
-	Status      Status
-	BrandScore  float64
-	Version     int64
+	Description string   `json:"description,omitempty"`
+	BrandType   string   `json:"brand_type,omitempty"`
+	Categories  string `json:"categories,omitempty"`
+	ImageURL    string   `json:"image_url,omitempty"`
+	Status      Status   `json:"status,omitempty"`
+	BrandScore  float64  `json:"brand_score,omitempty"`
+	Version     int64    `json:"version"`
 }

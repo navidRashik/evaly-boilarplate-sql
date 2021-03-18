@@ -12,6 +12,7 @@ func brandsRouter(ctrl *BrandsController) http.Handler {
 		r.Get("/", ctrl.ListBrand)
 		r.Post("/", ctrl.AddBrand)
 		r.Get("/{slug}", ctrl.GetBrand)
+		r.Put("/", ctrl.UpdateBrand)
 	})
 
 	return h
