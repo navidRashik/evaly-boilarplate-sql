@@ -45,13 +45,13 @@ func serve(cmd *cobra.Command, args []string) error {
 	lgr := logger.DefaultOutStructLogger
 	var err error
 
-	//db, err := infraMongo.New(ctx, cfgMySQL.URL, cfgMySQL.DBName, cfgMySQL.DBTimeOut)
-	//if err != nil {
-	//	return err
-	//}
-	//defer db.Close(ctx)
-
-	db, err := infraSql.New(ctx, "mysql", cfgMySQL.URL, cfgMySQL.DBName, nil)
+	db, err := infraSql.New(ctx, "mysql", cfgMySQL.URL, cfgMySQL.DBName)
+	if err != nil {
+		log.Println(err)
+		log.Println("sleeping for 10s before shutting down...")
+		time.Sleep(time.Second * 10)
+		return err
+	}
 
 	err = infraSentry.NewInit(cfgSentry.URL)
 	if err != nil {
@@ -101,14 +101,14 @@ func startHealthServer(cfg *config.Application, db *infraSql.DB) error {
 		return err
 	}
 	graceful := func() error {
-		log.Println("To shutdown immedietly press again")
+		log.Println("To shutdown immediately, press again.")
 
 		return nil
 	}
 
 	errCh := make(chan error)
 	forced := func() error {
-		log.Println("Shutting down server forcefully")
+		log.Println("Shutting down server forcefully...")
 		return nil
 	}
 	sigs := []os.Signal{syscall.SIGINT, syscall.SIGQUIT, syscall.SIGKILL, syscall.SIGTERM}
@@ -148,8 +148,8 @@ func ManageServer(srvr *http.Server, gracePeriod time.Duration) error {
 	sigs := []os.Signal{syscall.SIGINT, syscall.SIGQUIT, syscall.SIGKILL, syscall.SIGTERM, os.Interrupt}
 
 	graceful := func() error {
-		log.Println("Suttingdown server gracefully with in", gracePeriod)
-		log.Println("To shutdown immedietly press again")
+		log.Println("Sutting down server gracefully within", gracePeriod)
+		log.Println("To shutdown immediately press again")
 
 		ctx, cancel := context.WithTimeout(context.Background(), gracePeriod)
 		defer cancel()
@@ -158,7 +158,7 @@ func ManageServer(srvr *http.Server, gracePeriod time.Duration) error {
 	}
 
 	forced := func() error {
-		log.Println("Shutting down server forcefully")
+		log.Println("Shutting down server forcefully..")
 		return srvr.Close()
 	}
 

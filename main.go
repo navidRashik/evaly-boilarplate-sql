@@ -22,6 +22,8 @@ func init() {
 }
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
 	}

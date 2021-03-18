@@ -12,7 +12,7 @@ $ make build
 
 ## Application binary (run server)
 ```bash
-$ go-boilerplate serve-rest
+$ go-boilerplate serve -c example.config.yaml
 or
 $ make run
 ```
