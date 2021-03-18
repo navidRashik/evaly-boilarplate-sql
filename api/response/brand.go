@@ -3,7 +3,7 @@ package response
 import "go-mysql-boilerplate/model"
 
 type BrandInfoResp struct {
-	ID          int64        `json:"id,omitempty" bson:"id"`
+	ID          uint        `json:"id,omitempty" bson:"id"`
 	Name        string       `json:"name,omitempty" bson:"name"`
 	Approved    bool         `json:"approved,omitempty" bson:"approved"`
 	Slug        string       `json:"slug,omitempty" bson:"slug"`

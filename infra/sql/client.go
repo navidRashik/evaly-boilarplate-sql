@@ -3,6 +3,7 @@ package sql
 import (
 	"context"
 	"database/sql"
+	"go-mysql-boilerplate/model"
 	"fmt"
 	"go-mysql-boilerplate/logger"
 	"gorm.io/driver/postgres"
@@ -20,6 +21,8 @@ type DB struct {
 	Name     string
 	lgr      logger.Logger
 }
+
+
 
 // New returns a new instance of mongodb using session s
 func New(ctx context.Context, driverName, dsn, name string) (*DB, error) {
@@ -61,9 +64,12 @@ func New(ctx context.Context, driverName, dsn, name string) (*DB, error) {
 		Name:     name,
 		SqlDB:    sqlDB,
 	}
+	// Migrate the schema
+	//database.AutoMigrate(&model.BrandInfo{})
+	// Migrate the schema
+	database.AutoMigrate(&model.BrandInfo{})
 	return db, nil
 }
-
 
 func (d *DB) println(args ...interface{}) {
 	if d.lgr != nil {
