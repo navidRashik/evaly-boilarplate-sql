@@ -5,9 +5,10 @@ app:
     30
   system_server_port:
     8001
-mongo:
-  url: mongodb://root:root@localhost:27017
-  db_name: boilerplate
+sql:
+#  url: postgres://mahfuz:12345@localhost:5432
+  url: "host=localhost user=mahfuz password=12345 dbname=epay_wallet port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+  db_name: epay_wallet
   time_out: 30
 collection:
   brand: brands

@@ -36,7 +36,8 @@ func init() {
 
 func serve(cmd *cobra.Command, args []string) error {
 	cfgApp := config.GetApp(cfgPath)
-	cfgMySQL := config.GetMySQL(cfgPath)
+	//cfgMySQL := config.GetMySQL(cfgPath)
+	cfgPostgreSQL := config.GetPostgreSQL(cfgPath)
 	cfgSentry := config.GetSentry(cfgPath)
 	cfgDBTable := config.GetTable(cfgPath)
 
@@ -51,7 +52,7 @@ func serve(cmd *cobra.Command, args []string) error {
 	//}
 	//defer db.Close(ctx)
 
-	db, err := infraSql.New(ctx, "mysql", cfgMySQL.URL, cfgMySQL.DBName, nil)
+	db, err := infraSql.New(ctx, "postgres", cfgPostgreSQL.URL, cfgPostgreSQL.DBName)
 
 	err = infraSentry.NewInit(cfgSentry.URL)
 	if err != nil {

@@ -22,20 +22,20 @@ type DB struct {
 }
 
 // New returns a new instance of mongodb using session s
-func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*DB, error) {
+func New(ctx context.Context, driverName, dsn, name string) (*DB, error) {
 	gormConfig := &gorm.Config{}
 
 	var dialector gorm.Dialector
 	if driverName == "mysql" {
 		dialector = mysql.New(mysql.Config{
-			DriverName:        name,
+			DriverName:        driverName,
 			DSN:               dsn,
 			Conn:              nil,
 			DefaultStringSize: 255,
 		})
 	} else if driverName == "postgres" {
 		dialector = postgres.New(postgres.Config{
-			DriverName:           name,
+			//DriverName:           "pgx",
 			DSN:                  dsn,
 			PreferSimpleProtocol: false,
 			WithoutReturning:     false,
@@ -61,30 +61,9 @@ func New(ctx context.Context, driverName, dsn, name string, opts ...Option) (*DB
 		Name:     name,
 		SqlDB:    sqlDB,
 	}
-	for _, opt := range opts {
-		opt.apply(db)
-	}
 	return db, nil
 }
 
-// Option is mongo db option
-type Option interface {
-	apply(*DB)
-}
-
-// OptionFunc implements Option interface
-type OptionFunc func(db *DB)
-
-func (f OptionFunc) apply(db *DB) {
-	f(db)
-}
-
-// SetLogger sets logger
-func SetLogger(lgr logger.Logger) Option {
-	return OptionFunc(func(db *DB) {
-		db.lgr = lgr
-	})
-}
 
 func (d *DB) println(args ...interface{}) {
 	if d.lgr != nil {
