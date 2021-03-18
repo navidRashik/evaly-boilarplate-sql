@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"gorm.io/gorm/clause"
 	"log"
 
 	infraSql "go-mysql-boilerplate/infra/sql"
@@ -55,7 +56,9 @@ func (p *MyBrand) Create(ctx context.Context, bi *model.BrandInfo) error {
 func (p *MyBrand) ListBrands(ctx context.Context, selector *model.BrandInfo, skip, limit int) ([]*model.BrandInfo, error) {
 	brands := make([]*model.BrandInfo, 0)
 
-	tx := p.db.Database.Preload("x").Preload("y").Limit(limit).Offset(skip).Where(selector)
+	//tx := p.db.Database.Preload("x").Preload("y").Limit(limit).Offset(skip).Where(selector)
+	//tx := p.db.Database.Where("approved = ?", false).Preload(clause.Associations).Limit(limit).Offset(skip).Where(selector)
+	tx := p.db.Database.Preload(clause.Associations).Limit(limit).Offset(skip).Where(selector)
 
 	err := tx.Find(&brands).Error
 	if err != nil {

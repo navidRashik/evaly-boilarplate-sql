@@ -65,8 +65,6 @@ func New(ctx context.Context, driverName, dsn, name string) (*DB, error) {
 		SqlDB:    sqlDB,
 	}
 	// Migrate the schema
-	//database.AutoMigrate(&model.BrandInfo{})
-	// Migrate the schema
 	database.AutoMigrate(&model.BrandInfo{})
 	return db, nil
 }
